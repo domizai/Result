@@ -1,6 +1,6 @@
 # A Java Result Type for Error Handling
 
-The `Result` monad offers a structured way to handle potential errors in your methods, replacing the need to throw exceptions. A `Result` can be either `Ok`, containing a successful return value, or ?`Err`, containing an error message if the method call fails.
+The `Result` monad offers a structured way to handle potential errors in your methods, replacing the need to throw exceptions. A `Result` can be either `Ok` (containing a successful return value) or `Err` (containing an error message) if the method call fails.
 
 ## Motivation
 
