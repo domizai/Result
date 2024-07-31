@@ -1,14 +1,12 @@
-# Result Type for Error Handling
+# A Java Result Type for Error Handling
 
-The `Result` type, which is returned instead of thrown exceptions, offers a structured way to handle potential errors in your methods. A `Result` can either be of the concrete type `Ok` (containing a successful return value) or `Err` (containing an error message if the method call has failed).
-
+The `Result` monad offers a structured way to handle potential errors in your methods, replacing the need to throw exceptions. A `Result` can be either `Ok`, containing a successful return value, or ?`Err`, containing an error message if the method call fails.
 
 ## Motivation
 
-Using unchecked exceptions poses the risk of errors remaining unhandled and potentially causing a program crash, as `try-catch` clauses are optional and can easily be ignored or forgotten. The `Result` type enforces handling of potential errors, leading to more robust and maintainable code.
+Exceptions are generally considered expensive. In addition, `try-catch` clauses are combersome and unsuitable for flow control. The `Result` type avoids this overhead while enforcing error handling, resulting in more robust and maintainable code.
 
-
-## Examples
+## Basic Example
 
 ```java
 import static result.Result.Ok;
@@ -23,17 +21,16 @@ Result<Double> divide(double a, double b) {
 
 // Example usage
 String str = divide(10, 0)
-    .onErr(e -> err1.set(true)) // Called due to division by zero
+    .onErr(System.out::println) // Called due to division by zero
     .mapOr(
         v -> Err(new Error()),  // Not called
-        e -> Ok(4))             // Called and returns Ok(4)
-    .onErr(e -> err2.set(true)) // Not called
+        e -> Ok(4))             // Called
+    .onErr(System.out::println) // Not called
     .map(v -> Ok(v.toString()))
     .get();
 
 assertEquals(str, "4");
 ```
-
 
 ### Result\<Void>
 
@@ -47,9 +44,9 @@ Result<Void> func() {
 }
 ```
 
-### Propagate an Err
+### Error Propagation
 
-Example of propagating an `Err` to the caller.
+Example of propagating an `Err` to the caller using pattern matching.
 
 ```java
 Result<Double> func() {
@@ -63,12 +60,9 @@ Result<Double> func() {
 }
 ```
 
-
 ## Methods
 
-The `Result` type offers a range of methods to simplify the processing of return values and enhance control flow. These methods create a decoupled and logical chain of data processing, enabling a clearer structure of the code without relying on `try-catch` and `if-else` clauses.
-
-For more details see the documentation: [Result](doc/result/Result.html).
+The `Result` type offers a range of methods that simplify further processing and enable the encapsulation of operations into a logical data flow. For more details, see the documentation: [Result](doc/result/Result.html).
 
 ### is-Methods
 - `isOk()`: Checks if the result is Ok.
@@ -82,12 +76,11 @@ For more details see the documentation: [Result](doc/result/Result.html).
 ### on-Methods
 - `onOk(okConsumer)`: Executes an action if the result is Ok.
 - `onErr(errConsumer)`: Executes an action if the result is Err.
-- `on(okConsumer, errConsumer)`: Executes the appropriate action based on the result type.
+- `on(okConsumer, errConsumer)`: Executes the appropriate action based on the result type. Effectively the same as calling `.onOk(okConsumer).onErr(errConsumer)`.
 
 ### map-Methods
 - `map(okMapper)`: Transforms the Ok value to a new Result.
-- `mapOr(okMapper, errMapper)`: Transforms the result based on its type.
-
+- `mapOr(okMapper, errMapper)`: Transforms the result based on its type. `.mapOr(a -> b, c)` is effectively the same as `.map(a -> Ok(b)).getOr(c)`.
 
 ## Contribute
 We welcome feedback and contributions from the community. If you have suggestions for improvement or discover issues, please check our contribution guidelines and consider making a contribution.
