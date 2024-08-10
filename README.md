@@ -23,10 +23,10 @@ Result<Double> divide(double a, double b) {
 String str = divide(10, 0)
     .onErr(System.out::println) // Called due to division by zero
     .mapOr(
-        v -> Err(new Error()),  // Not called
-        e -> Ok(4))             // Called
+        val -> Err(new Error()),  // Not called
+        err -> Ok(4))             // Called
     .onErr(System.out::println) // Not called
-    .map(v -> Ok(v.toString()))
+    .map(val -> Ok(val.toString()))
     .get();
 
 assertEquals(str, "4");
@@ -52,8 +52,8 @@ Example of propagating an `Err` to the caller using pattern matching.
 Result<Double> func() {
     Double result; 
     switch (divide(10, 0)) {
-        case Ok(Double v) -> result = v;
-        case Err(Throwable e) -> { return Err(e); }
+        case Ok(Double val) -> result = val;
+        case Err(Throwable err) -> { return Err(err); }
     }
     // Additional processing
     return Ok(result);
