@@ -82,5 +82,9 @@ The `Result` type offers a range of methods that simplify further processing and
 - `map(okMapper)`: Transforms the Ok value to a new Result.
 - `mapOr(okMapper, errMapper)`: Transforms the result based on its type. `.mapOr(a -> b, c)` is effectively the same as `.map(a -> Ok(b)).getOr(c)`.
 
+## `Err` without Stack Trace
+
+Whenever an exception object is created, it generates a stack trace, which introduces overhead. If you wish to disable the stack trace, you can do so by either implementing your own exception and overriding the `fillInStackTrace()` method or using the [Throwable](https://docs.oracle.com/javase/8/docs/api/java/lang/Throwable.html#Throwable-java.lang.String-java.lang.Throwable-boolean-boolean-) constructor to disable stack trace generation.
+
 ## Contribute
 We welcome feedback and contributions from the community. If you have suggestions for improvement or discover issues, please check our contribution guidelines and consider making a contribution.
